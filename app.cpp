@@ -9,7 +9,6 @@
 #include "shuffle.h"
 #include "platform.h"
 #include <chrono>
-
 #include <thread>
 using namespace std;
 using namespace std::this_thread;
@@ -63,7 +62,13 @@ float roundTo2Decimal(float var) {
 	return (float)val / 100;
 }
 
-bool trailingUnconsciousDifference(string original, string vim) {
+const string WHITESPACE = " \n\r\t\f\v";
+string rtrim(string s) {
+	size_t end = s.find_last_not_of(WHITESPACE);
+	return (end == string::npos) ? "" : s.substr(0, end + 1);
+}
+
+bool equalIgnoringTrailingSpace(string original, string vim) {
 	string originalLine;
 	string vimLine;
 	size_t posOrig = 0, posVim = 0;
@@ -71,19 +76,22 @@ bool trailingUnconsciousDifference(string original, string vim) {
 	while ((posOrig = original.find(delimiter)) != string::npos
 		&& (posVim = vim.find(delimiter)) != string::npos
 	) {
-		originalLine = original.substr(0, posOrig);
-		vimLine = original.substr(0, posVim);
+		originalLine = rtrim(original.substr(0, posOrig));
+		vimLine = rtrim(original.substr(0, posVim));
+		if (originalLine.compare(vimLine) != 0) {
+			return false;
+		}
 		original.erase(0, posOrig + delimiter.length());
 		vim.erase(0, posVim + delimiter.length());
 	}
 
 	if (count(original.begin() , original.end(), '\n') 
 		== count(vim.begin(), vim.end(), '\n')) {
-
-		}
-
-
-
+		originalLine = rtrim(original);
+		vimLine = rtrim(vim);
+		return originalLine.compare(vimLine) == 0;
+	}
+	return false;
 }
 
 int main() 
@@ -104,8 +112,8 @@ int main()
 			infile.close();
 		}
 		
-		string x = vimShuffle(origin_str, randomSource);
-		// string x = origin_str;
+		// string x = vimShuffle(origin_str, randomSource);
+		string x = origin_str;
 		ofstream outfile(tmpFileName);
 		outfile << x;
 		outfile.close();
@@ -126,13 +134,15 @@ int main()
 			userSaveString = ss.str();
 			userSaveFile.close();
 			steady_clock::time_point end = steady_clock::now();
-			if (userSaveString.compare(origin_str) != 0) {
+			if (!equalIgnoringTrailingSpace(userSaveString, origin_str)
+				// userSaveString.compare(origin_str) != 0
+				) {
 				cout << "Your output\033[1;31m did not\033[0m match the expected file." << endl;
 				char c = letterInput();
 				if (c == 'r') {
 					total_time = 0.00; 
-					// string x = origin_str;
-					string x = vimShuffle(origin_str, randomSource);
+					string x = origin_str;
+					// string x = vimShuffle(origin_str, randomSource);
 					ofstream outfile(tmpFileName);
 					outfile << x;
 					outfile.close();
