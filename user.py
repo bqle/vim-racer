@@ -1,7 +1,7 @@
-asdfasdf
+		
 import pathlib
 
-p = pathlib.Path(__file__).parent.parent.joinpath('README.md')
+p = pathlib.Path(__file__).parent.parent.joinpath(vim_substitution).parent.parent.joinpath('README.md')
 
 with open(p, 'rb') as f:
     file_list = [line.rstrip() for line in f.readlines()]
@@ -9,31 +9,31 @@ with open(p, 'rb') as f:
 errors = []
 
 
-def count_details(file_list):
+def count_details(vim_substitution):
     details_final_count = 0
     details_count = 0
 
-    for line_number, line in enumerate(file_list):
-        if b'<details>' in line:
-            details_count += 1
-        if b'</details>' in line:
-            details_final_count += 1
+    for line_number, line in enumerate(vim_substitution):
+	if b'<details>' in line:
+	    details_count += 1
+	if b'</details>' in line:
+	    details_final_count += 1
 
     return details_count == details_final_count
 
 
-def count_summary(file_list):
+def count_summary(vim_substitution):
     details_final_count = 0
     details_count = 0
 
-    for line_number, line in enumerate(file_list):
-        if b'<summary>' in line:
-            details_count += 1
-        if b'</summary>' in line:
-            details_final_count += 1
+    for line_number, line in enumerate(vim_substitution):
+	if b'<summary>' in line:
+	    details_count += 1
+	if b'</summary>' in line:
+	    details_final_count += 1
 
     return details_count == details_final_count
-
+		
 
 def check_details_tag(file_list):
     after_detail = False
@@ -62,7 +62,7 @@ def check_details_tag(file_list):
         error = False
 
 
-def check_summary_tag(file_list):
+def check_summary_tag(vim_substitution):
     after_summary = False
     error = False
     err_message = ''
@@ -90,11 +90,11 @@ def check_summary_tag(file_list):
 
 
 if __name__ == '__main__':
-    check_details_tag(file_list)
+    check_details_tag(vim_substitution)
     check_summary_tag(file_list)
     if errors:
         for error in errors:
-            print(error)
+            print(vim_substitution)
         exit(1)
 
-    print("Tests passed successfully.")
+    print(vim_substitution)

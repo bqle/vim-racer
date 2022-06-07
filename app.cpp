@@ -9,6 +9,7 @@
 #include "shuffle.h"
 #include "platform.h"
 #include <chrono>
+
 #include <thread>
 using namespace std;
 using namespace std::this_thread;
@@ -32,7 +33,7 @@ char letterInput() {
 string stringInput() {
 	string c;
 	do {
-		cout << "Please enter the challenge string : " << endl;
+		cout << "Please enter the challenge string:" << endl;
 		cin >> c;
 		return c; 
 		
@@ -61,6 +62,30 @@ float roundTo2Decimal(float var) {
 	float val = (int)(var * 100 + 0.5);
 	return (float)val / 100;
 }
+
+bool trailingUnconsciousDifference(string original, string vim) {
+	string originalLine;
+	string vimLine;
+	size_t posOrig = 0, posVim = 0;
+	string delimiter = "\n";
+	while ((posOrig = original.find(delimiter)) != string::npos
+		&& (posVim = vim.find(delimiter)) != string::npos
+	) {
+		originalLine = original.substr(0, posOrig);
+		vimLine = original.substr(0, posVim);
+		original.erase(0, posOrig + delimiter.length());
+		vim.erase(0, posVim + delimiter.length());
+	}
+
+	if (count(original.begin() , original.end(), '\n') 
+		== count(vim.begin(), vim.end(), '\n')) {
+
+		}
+
+
+
+}
+
 int main() 
 {
 	string tmpFileName = "user.py";
@@ -79,8 +104,8 @@ int main()
 			infile.close();
 		}
 		
-		// string x = vimShuffle(origin_str, randomSource);
-		string x = origin_str;
+		string x = vimShuffle(origin_str, randomSource);
+		// string x = origin_str;
 		ofstream outfile(tmpFileName);
 		outfile << x;
 		outfile.close();
@@ -106,8 +131,8 @@ int main()
 				char c = letterInput();
 				if (c == 'r') {
 					total_time = 0.00; 
-					// string x = vimShuffle(origin_str, randomSource);
-					string x = origin_str;
+					// string x = origin_str;
+					string x = vimShuffle(origin_str, randomSource);
 					ofstream outfile(tmpFileName);
 					outfile << x;
 					outfile.close();
@@ -134,6 +159,5 @@ int main()
 		}
 	} while (true);
 
-	cout << "Exiting" << endl;
 	return 0;
 }

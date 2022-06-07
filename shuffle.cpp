@@ -16,7 +16,6 @@ size_t nextRandom() {
 }
 
 void duplicateLine (vector<string>& lines) {
-	cout << "There are: " << lines.size() << " lines" <<endl;
 	vector<string>::iterator it = lines.begin();
 	int start = nextRandom() % lines.size();
 	int len = nextRandom() % ((lines.size()) - start);
@@ -25,7 +24,6 @@ void duplicateLine (vector<string>& lines) {
 
 	start = nextRandom() % lines.size();
 	lines.insert(lines.begin() + start, copy.begin(), copy.end());
-	cout << start << " " << copy.size() << endl;
 }
 
 int strpos(string haystack, char needle, int nth)
@@ -66,7 +64,6 @@ void changeBetweenBrackets (vector<string>& lines) {
 		int cntLeft = count(line.begin(), line.end(), '(');
 		int cntRight = count(line.begin(), line.end(), ')');
 		if (cntLeft > 0 && cntRight > 0) {
-			cout << "substituting" << endl;
 			int leftIndex = strpos(line, '(', nextRandom() % cntLeft + 1);
 			int rightIndex = strpos(line, ')', nextRandom() % cntRight + 1);
 			if (nextRandom() % 10 < 3) {
@@ -96,10 +93,8 @@ vector<vector<string> > groupLines (vector<string>& lines) {
 
 vector<vector<string> > groupLinesGuaranteed (vector<string>& lines, int k) {
 	vector<int> choices;
-	cout << "Grouping lines guaranteed" << endl;
 	while (choices.size() < k) {
 		int c = nextRandom() % lines.size();
-		cout << c << endl;
 		if ((c < lines.size() - 1) && find(choices.begin(), choices.end(), c) == choices.end()) {
 			choices.push_back(c);
 		}
@@ -123,7 +118,6 @@ vector<vector<string> > groupLinesGuaranteed (vector<string>& lines, int k) {
 	for (auto & block : blocks) {
 		cnt += block.size();
 	}
-	cout << "block size" << cnt << endl; 
 	return blocks;
 }
 
@@ -146,13 +140,10 @@ void indentBlocksOfCode(vector<string>& lines) {
 		bool willIndent = nextRandom() % 5 < 2;
 		if (willIndent) {
 			for (string& s : block) {
-				cout << "Added indentations" << endl;
 				s.insert(0, "\t\t");
 			}
 		}
 	}
-	cout << "h" << endl;
-	cout << "blocks size" << cnt<< endl;
 	lines = reduce2dVectorTo1d(blocks);
 	// lines = vector<string>();
 	// for (vector<string> & block: blocks) {
@@ -202,20 +193,14 @@ string vimShuffle(string original, string randomSource) {
 	}
 	lines.push_back(original);
 
-	cout << "Duplicating lines ..." << endl;
-	// duplicateLine(lines);
-	cout << "Change brackets ..." << endl;
 	changeBetweenBrackets(lines);
-	cout << "Changing signs ..." << endl;
 	changeSigns(lines);
-	cout << "Indenting ..." << endl;
 
 	bool willIndent = nextRandom() % 2 < 1;
 	if (willIndent){
-		cout << "Indenting blocks of code" << endl;
 		indentBlocksOfCode(lines);
 	} else {
-		cout << "Shuffle blocks of code" << endl;
+		duplicateLine(lines);
 		swappingBlocksOfCode(lines);
 	}
 
